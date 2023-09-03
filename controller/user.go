@@ -83,6 +83,23 @@ func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
+	info, err := service.UserLogin(username, password)
+
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(http.StatusOK, UserRegisterResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+		return
+	} else {
+		c.JSON(http.StatusOK, UserRegisterResponse{
+			Response: Response{StatusCode: 0},
+			Token:    info.Token,
+			UserId:   info.UserID,
+		})
+		return
+	}
+
 	//token := username + password
 	//
 	//if user, exist := usersLoginInfo[token]; exist {
